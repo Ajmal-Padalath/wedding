@@ -1,20 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {
-  INITIAL_SETTINGS,
-  INITIAL_PLACES,
-  INITIAL_PEOPLE,
-  INITIAL_EXPENSES,
-  INITIAL_CHECKLIST
-} from '../utils/seedData';
+import { loadWeddingDataFromGoogleSheets } from '../services/googleSheets';
 
 const WeddingContext = createContext();
 
 const STORAGE_KEYS = {
-  SETTINGS: 'marryme_settings',
-  PLACES: 'marryme_places',
-  PEOPLE: 'marryme_people',
-  EXPENSES: 'marryme_expenses',
-  CHECKLIST: 'marryme_checklist',
   ACTIVITIES: 'marryme_activities',
   DARK_MODE: 'marryme_darkmode'
 };
@@ -31,16 +20,12 @@ export const WeddingProvider = ({ children }) => {
     }
   };
 
-  const [settings, setSettings] = useState(() => loadInitial(STORAGE_KEYS.SETTINGS, INITIAL_SETTINGS));
-  const [places, setPlaces] = useState(() => loadInitial(STORAGE_KEYS.PLACES, INITIAL_PLACES));
-  const [people, setPeople] = useState(() => loadInitial(STORAGE_KEYS.PEOPLE, INITIAL_PEOPLE));
-  const [expenses, setExpenses] = useState(() => loadInitial(STORAGE_KEYS.EXPENSES, INITIAL_EXPENSES));
-  const [checklist, setChecklist] = useState(() => loadInitial(STORAGE_KEYS.CHECKLIST, INITIAL_CHECKLIST));
-  const [activities, setActivities] = useState(() => loadInitial(STORAGE_KEYS.ACTIVITIES, [
-    { id: 'act-1', text: 'Venue deposit paid for Rosewood Ballroom', timestamp: '2 hours ago', type: 'expense' },
-    { id: 'act-2', text: 'Added guest Beatrice Royal under Ritz Carlton Hotel', timestamp: '5 hours ago', type: 'person' },
-    { id: 'act-3', text: 'Added new place St. Patrick Sanctuary', timestamp: '1 day ago', type: 'place' }
-  ]));
+  const [settings, setSettings] = useState({});
+  const [places, setPlaces] = useState([]);
+  const [people, setPeople] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [checklist, setChecklist] = useState([]);
+  const [activities, setActivities] = useState(() => loadInitial(STORAGE_KEYS.ACTIVITIES, []));
 
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.DARK_MODE);
@@ -48,27 +33,33 @@ export const WeddingProvider = ({ children }) => {
   });
 
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [isDataLoading, setIsDataLoading] = useState(true);
+  const [dataSourceError, setDataSourceError] = useState('');
 
-  // Sync state to local storage
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-  }, [settings]);
+  const refreshFromGoogleSheets = async () => {
+    setIsDataLoading(true);
+    setDataSourceError('');
+    try {
+      const data = await loadWeddingDataFromGoogleSheets();
+      setSettings(data.settings);
+      setPlaces(data.places);
+      setPeople(data.people);
+      setExpenses(data.expenses);
+      setChecklist(data.checklist);
+      return true;
+    } catch (error) {
+      console.error('Unable to load Google Sheets data:', error);
+      setDataSourceError(error.message);
+      return false;
+    } finally {
+      setIsDataLoading(false);
+    }
+  };
 
+  // Google Sheets is the sole source of listed wedding data.
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.PLACES, JSON.stringify(places));
-  }, [places]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.PEOPLE, JSON.stringify(people));
-  }, [people]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
-  }, [expenses]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CHECKLIST, JSON.stringify(checklist));
-  }, [checklist]);
+    refreshFromGoogleSheets();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
@@ -271,16 +262,9 @@ export const WeddingProvider = ({ children }) => {
     showToast(`Wedding configuration updated!`);
   };
 
-  const resetToDefaultData = () => {
-    setSettings(INITIAL_SETTINGS);
-    setPlaces(INITIAL_PLACES);
-    setPeople(INITIAL_PEOPLE);
-    setExpenses(INITIAL_EXPENSES);
-    setChecklist(INITIAL_CHECKLIST);
-    setActivities([
-      { id: 'act-1', text: 'Reset application data to initial luxury demo state', timestamp: 'Just now', type: 'general' }
-    ]);
-    showToast('Reset all data to default demo state!');
+  const resetToDefaultData = async () => {
+    const refreshed = await refreshFromGoogleSheets();
+    showToast(refreshed ? 'Reloaded data from Google Sheets.' : 'Could not reload Google Sheets data.', refreshed ? 'success' : 'error');
   };
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
@@ -302,6 +286,8 @@ export const WeddingProvider = ({ children }) => {
       activities,
       darkMode,
       toast,
+      isDataLoading,
+      dataSourceError,
 
       // Calculated stats
       totalExpenses,
@@ -332,6 +318,7 @@ export const WeddingProvider = ({ children }) => {
       updateSettings,
       toggleDarkMode,
       showToast,
+      refreshFromGoogleSheets,
       resetToDefaultData
     }}>
       {children}

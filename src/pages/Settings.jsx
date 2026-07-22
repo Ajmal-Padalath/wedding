@@ -25,9 +25,9 @@ export const Settings = () => {
     updateSettings(formData);
   };
 
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all wedding places, guests, expenses, and settings back to default demo state?')) {
-      resetToDefaultData();
+  const handleReset = async () => {
+    if (window.confirm('Reload all settings, places, guests, expenses, and checklist items from Google Sheets?')) {
+      await resetToDefaultData();
       setFormData(settings);
     }
   };
@@ -175,10 +175,10 @@ export const Settings = () => {
       <div className="p-6 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h4 className="font-serif-heading font-bold text-rose-800 dark:text-rose-300 text-base">
-            Reset Application Data
+            Reload Google Sheets Data
           </h4>
           <p className="text-xs text-rose-600 dark:text-rose-400 mt-1">
-            Reset all places, guests, expenses, and settings back to initial sample luxury demo data.
+            Reload all places, guests, expenses, checklist items, and settings from Google Sheets.
           </p>
         </div>
 
@@ -188,7 +188,7 @@ export const Settings = () => {
           className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-xs transition-all shrink-0"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Reset Demo Data</span>
+          <span>Reload Google Sheets</span>
         </button>
       </div>
     </div>

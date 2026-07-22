@@ -1,10 +1,10 @@
 export const INITIAL_SETTINGS = {
-  brideName: 'Sophia Elegant',
-  groomName: 'Alexander Royal',
-  weddingDate: '2026-11-15',
+  brideName: 'Farisha',
+  groomName: 'Ajmal',
+  weddingDate: '2026-09-20',
   totalBudget: 45000,
-  currency: '$',
-  venueLocation: 'Grand Chateaux & Gardens, New York',
+  currency: '₹',
+  venueLocation: 'Shubham Convention Center',
   notes: 'Dream autumn wedding setup with pastel rose and gold themes.'
 };
 

@@ -8,15 +8,16 @@ import {
   MapPin,
   UserPlus,
   DollarSign,
-  Heart,
   X
 } from 'lucide-react';
 import { PlaceModal } from '../modals/PlaceModal';
 import { PersonModal } from '../modals/PersonModal';
 import { ExpenseModal } from '../modals/ExpenseModal';
+import { useAuth } from '../../context/AuthContext';
 
 export const Topbar = ({ onOpenMobileSidebar, globalSearchQuery, setGlobalSearchQuery }) => {
-  const { activities, settings } = useWedding();
+  const { activities } = useWedding();
+  const { userLabel, logout } = useAuth();
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showPlaceModal, setShowPlaceModal] = useState(false);
@@ -167,8 +168,9 @@ export const Topbar = ({ onOpenMobileSidebar, globalSearchQuery, setGlobalSearch
             {/* Couple Profile Avatar */}
             <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-slate-800">
               <div className="w-8 h-8 rounded-full gold-gradient-bg flex items-center justify-center text-white text-xs font-bold shadow-xs">
-                S&A
+                {userLabel.slice(0, 1)}
               </div>
+              <button onClick={logout} className="hidden md:block text-xs font-semibold text-slate-500 hover:text-rose-600">Sign out</button>
             </div>
           </div>
         </div>

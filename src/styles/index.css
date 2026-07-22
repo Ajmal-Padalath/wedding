@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Playfair Display', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #FAF7F2;
+    color: #2D2623;
+    overflow-x: hidden;
+  }
+
+  .dark body {
+    background-color: #121118;
+    color: #F3EFEA;
+  }
+
+  h1, h2, h3, .font-serif-heading {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Custom Wedding Luxury Accent Classes */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #997A15 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #D4AF37 0%, #B89228 100%);
+}
+
+.rose-gold-gradient {
+  background: linear-gradient(135deg, #F8E8EE 0%, #F5D3DE 50%, #E8A0BF 100%);
+}
+
+.dark .rose-gold-gradient {
+  background: linear-gradient(135deg, #2D1A24 0%, #3D2230 100%);
+}
+
+/* Glassmorphism Card Effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.dark .glass-card {
+  background: rgba(26, 24, 35, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B89228;
+}

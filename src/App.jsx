@@ -13,7 +13,7 @@ import { Settings } from './pages/Settings';
 export function App() {
   return (
     <WeddingProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <MainLayout>
           <Routes>
             <Route path="/" element={<Dashboard />} />

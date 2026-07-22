@@ -124,7 +124,7 @@ export const Dashboard = () => {
         {/* Places Card */}
         <Link to="/places" className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-amber-200/50 dark:border-slate-800 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Places</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Place</span>
             <div className="p-2.5 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
               <MapPin className="w-5 h-5" />
             </div>
